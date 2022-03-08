@@ -7,7 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyWebApp", "LegacyWebAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyWebApp.Tests", "LegacyWebApp.Tests\LegacyWebApp.Tests.csproj", "{BA8F8C44-4208-48FE-99F4-E2A583419B3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigurationManagerProvider", "ConfigurationManagerProvider\ConfigurationManagerProvider.csproj", "{B3D7F7B8-3C0B-4369-AEC5-014D339E0356}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigurationManagerProvider", "ConfigurationManagerProvider\ConfigurationManagerProvider.csproj", "{B3D7F7B8-3C0B-4369-AEC5-014D339E0356}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B9959299-DAA3-4C5F-8642-9FCAA0AEC056}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
