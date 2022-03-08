@@ -37,7 +37,7 @@ namespace LegacyWebApp.Controllers
 
             _fileSystem.File.WriteAllText(filePath, fileName);
 
-            return Json(filePath);
+            return Json($"File created: {filePath}", JsonRequestBehavior.AllowGet);
         }
     }
 }
