@@ -29,18 +29,15 @@ namespace LegacyWebApp.Controllers
         }
 
         [HttpGet]
-        [ActionName("write-file")]
-        public HttpResponseMessage WriteFile()
+        [ActionName("new-file")]
+        public ActionResult WriteFile()
         { 
             var fileName = Guid.NewGuid().ToString();
             var filePath = $"{_legacyWebAppFilesPath}\\{fileName}.txt";
 
             _fileSystem.File.WriteAllText(filePath, fileName);
 
-            return new HttpResponseMessage(System.Net.HttpStatusCode.Created)
-            {
-                Content = new StringContent(filePath, Encoding.UTF8, "application/json")
-            };
+            return Json(filePath);
         }
     }
 }
