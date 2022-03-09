@@ -187,7 +187,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LegacyWebApp\LegacyWebApp.csproj">
+    <ProjectReference Include="..\..\src\LegacyWebApp\LegacyWebApp.csproj">
       <Project>{A2933D5A-049D-4D39-BDBD-10F77DD521D7}</Project>
       <Name>LegacyWebApp</Name>
     </ProjectReference>

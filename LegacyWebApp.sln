@@ -11,8 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigurationManagerProvide
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B9959299-DAA3-4C5F-8642-9FCAA0AEC056}"
 	ProjectSection(SolutionItems) = preProject
-		.\README.md = .\README.md
+		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E97AC5E7-8B2D-4A85-8935-854EF3A547C9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C7661165-16FC-4D3F-8C14-F27357C35C0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +39,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A2933D5A-049D-4D39-BDBD-10F77DD521D7} = {E97AC5E7-8B2D-4A85-8935-854EF3A547C9}
+		{BA8F8C44-4208-48FE-99F4-E2A583419B3E} = {C7661165-16FC-4D3F-8C14-F27357C35C0D}
+		{B3D7F7B8-3C0B-4369-AEC5-014D339E0356} = {E97AC5E7-8B2D-4A85-8935-854EF3A547C9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5288FE85-BFAB-4E9C-AE30-CC5EB4C66D32}
