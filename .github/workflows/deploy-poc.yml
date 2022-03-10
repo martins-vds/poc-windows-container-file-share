@@ -1,18 +1,122 @@
 name: Docker Image CI
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  workflow_dispatch:
+    inputs:
+      imageTag:
+        type: text
+        default: ${{ github.sha }}
+      appName:
+        type: text
+        required: true
+      location:
+        type: choice
+        required: true
+        options:
+          - asia
+          - asiapacific
+          - australia
+          - australiacentral
+          - australiacentral2
+          - australiaeast
+          - australiasoutheast
+          - brazil
+          - brazilsouth
+          - brazilsoutheast
+          - canada
+          - canadacentral
+          - canadaeast
+          - centralindia
+          - centralus
+          - centraluseuap
+          - centralusstage
+          - eastasia
+          - eastasiastage
+          - eastus
+          - eastus2
+          - eastus2euap
+          - eastus2stage
+          - eastusstage
+          - europe
+          - france
+          - francecentral
+          - francesouth
+          - germany
+          - germanynorth
+          - germanywestcentral
+          - global
+          - india
+          - japan
+          - japaneast
+          - japanwest
+          - jioindiacentral
+          - jioindiawest
+          - korea
+          - koreacentral
+          - koreasouth
+          - northcentralus
+          - northcentralusstage
+          - northeurope
+          - norway
+          - norwayeast
+          - norwaywest
+          - southafrica
+          - southafricanorth
+          - southafricawest
+          - southcentralus
+          - southcentralusstage
+          - southeastasia
+          - southeastasiastage
+          - southindia
+          - swedencentral
+          - switzerland
+          - switzerlandnorth
+          - switzerlandwest
+          - uae
+          - uaecentral
+          - uaenorth
+          - uk
+          - uksouth
+          - ukwest
+          - unitedstates
+          - unitedstateseuap
+          - westcentralus
+          - westeurope
+          - westindia
+          - westus
+          - westus2
+          - westus2stage
+          - westus3
+          - westusstage
 
+env:
+  APP_NAME: ${{ github.event.inputs.appName }} 
+  LOCATION: ${{ github.event.inputs.location }}
+  IMAGE_TAG: ${{ github.event.inputs.imageTag }}
+  DEPLOYMENT_NAME: "pocdeployment"
 jobs:
-
-  build:
-
+  deploy-poc:
+    name: Deploy base infrastructure
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v2
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Deploy acr and storage account
+      id: deploy_infra
+      uses: Azure/arm-deploy@v1.0.6
+      with:
+        region: ${{ env.LOCATION }}
+        template: ./deploy/infra/infra.bicep
+        deploymentName: ${{ env.DEPLOYMENT_NAME }}-infra
+        # Supply deployment parameter values.
+        parameters: appName=${{ env.APP_NAME }} location=${{ env.LOCATION }}
+    - name: Assign service principal to acr
+      run: az role assignment create --assignee ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }} --scope ${{ steps.deploy_infra.outputs.acr.id }} --role acrpull
+    - name: Login to acr
+      run: az acr login --name ${{ ${{ steps.deploy_infra.outputs.acr.name }} }}
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      run: docker build . --file Dockerfile --tag ${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
+    - name: Push the Docker image to acr
+      run: docker push ${{ steps.deploy_infra.outputs.acr.loginServer }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
