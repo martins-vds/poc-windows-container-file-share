@@ -120,7 +120,7 @@ jobs:
       id: deploy_infra_outputs
       run: |
         $acrJson=$(az deployment sub show -n ${{ env.DEPLOYMENT_NAME }} --query properties.outputs.acr.value)
-        echo "::set-output name=acr::${{ fromJson($acrJson) }}"
+        echo "::set-output name=acr::${{ fromJson(($acrJson)) }}"
         echo "::set-output name=rg::$(az deployment sub show -n ${{ env.DEPLOYMENT_NAME }} --query properties.outputs.rg.value)"
         echo "::set-output name=storage::$(az deployment sub show -n ${{ env.DEPLOYMENT_NAME }} --query properties.outputs.storage.value)"
     - name: Assign service principal to acr
