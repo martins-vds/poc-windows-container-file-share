@@ -1,4 +1,4 @@
-name: Deploy POC $(date +s)
+name: Deploy POC
 
 on:
   workflow_dispatch:
