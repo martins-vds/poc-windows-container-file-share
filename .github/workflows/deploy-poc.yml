@@ -94,7 +94,7 @@ env:
   APP_NAME: ${{ github.event.inputs.appName }} 
   LOCATION: ${{ github.event.inputs.location }}
   IMAGE_TAG: ${{ github.event.inputs.imageTag }}
-  DEPLOYMENT_NAME: "pocdeployment$($(date +%s))"
+  DEPLOYMENT_NAME: "pocdeployment"
 jobs:
   deploy-poc:
     name: Deploy base infrastructure
@@ -104,6 +104,8 @@ jobs:
     - uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Generate unique deployment name
+      run: echo "DEPLOYMENT_NAME=$env:DEPLOYMENT_NAME-$((New-Guid).Guid)" >> $env:GITHUB_ENV
     - name: Deploy acr and storage account
       id: deploy_infra
       uses: Azure/arm-deploy@v1.0.6
