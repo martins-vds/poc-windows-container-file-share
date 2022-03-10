@@ -111,15 +111,15 @@ jobs:
         template: ./deploy/infra/infra.bicep
         deploymentName: ${{ env.DEPLOYMENT_NAME }}-infra
         # Supply deployment parameter values.
-        parameters: appName=${{ env.APP_NAME }} location=${{ env.LOCATION }} deploymentName=${{ env.DEPLOYMENT_NAME }}
+        parameters: appName=${{ env.APP_NAME }} location=${{ env.LOCATION }} deploymentName=${{ env.DEPLOYMENT_NAME }}-infra
     - name: Assign service principal to acr
-      run: az role assignment create --assignee ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }} --scope ${{ steps.deploy_infra.outputs.acr.id }} --role acrpull
+      run: az role assignment create --assignee ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }} --scope ${{ steps.deploy_infra.outputs.acr.value.id }} --role acrpull
     - name: Login to acr
-      run: az acr login --name ${{ steps.deploy_infra.outputs.acr.name }}
+      run: az acr login --name ${{ steps.deploy_infra.outputs.acr.value.name }}
     - name: Validate image tag
       if: ${{ env.IMAGE_TAG }} == ""
       run: echo "IMAGE_TAG=$env:GITHUB_SHA" >> $env:GITHUB_ENV
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag ${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
     - name: Push the Docker image to acr
-      run: docker push ${{ steps.deploy_infra.outputs.acr.loginServer }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
+      run: docker push ${{ steps.deploy_infra.outputs.acr.value.loginServer }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}

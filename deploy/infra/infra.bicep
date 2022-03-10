@@ -20,5 +20,5 @@ module infra 'modules/infra.bicep' = {
 }
 
 output rg string = rg.name
-output acr object = infra.outputs.acr
 output storage string = infra.outputs.storage
+output acr object = infra.outputs.acr
