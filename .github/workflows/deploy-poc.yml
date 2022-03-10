@@ -111,7 +111,7 @@ jobs:
         template: ./deploy/infra/infra.bicep
         deploymentName: ${{ env.DEPLOYMENT_NAME }}-infra
         # Supply deployment parameter values.
-        parameters: appName=${{ env.APP_NAME }} location=${{ env.LOCATION }}
+        parameters: appName=${{ env.APP_NAME }} location=${{ env.LOCATION }} deploymentName=${{ env.DEPLOYMENT_NAME }}
     - name: Assign service principal to acr
       run: az role assignment create --assignee ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }} --scope ${{ steps.deploy_infra.outputs.acr.id }} --role acrpull
     - name: Login to acr
