@@ -116,20 +116,20 @@ jobs:
         deploymentName: ${{ env.DEPLOYMENT_NAME }}
         # Supply deployment parameter values.
         parameters: appName=${{ env.APP_NAME }} location=${{ env.LOCATION }} deploymentName=${{ env.DEPLOYMENT_NAME }}
-    - name: Fetch '${{ env.DEPLOYMENT_NAME }}' deployment outputs
+    - name: Parse '${{ env.DEPLOYMENT_NAME }}' deployment outputs
       id: deploy_infra_outputs
       run: |
-        echo "::set-output name=containerRegistry::$(az deployment show -n ${{ env.DEPLOYMENT_NAME }} --query properties.outputs.containerRegistry)"
-        echo "::set-output name=resourceGroup::$(az deployment show -n ${{ env.DEPLOYMENT_NAME }} --query properties.outputs.resourceGroup)"
-        echo "::set-output name=storage::$(az deployment show -n ${{ env.DEPLOYMENT_NAME }} --query properties.outputs.storage)"
+        echo "::set-output name=acr::$(az deployment show -n ${{ env.DEPLOYMENT_NAME }} --query properties.outputs.acr.value)"
+        echo "::set-output name=rg::$(az deployment show -n ${{ env.DEPLOYMENT_NAME }} --query properties.outputs.rg.value)"
+        echo "::set-output name=storage::$(az deployment show -n ${{ env.DEPLOYMENT_NAME }} --query properties.outputs.storage.value)"
     - name: Assign service principal to acr
-      run: az role assignment create --assignee ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }} --scope ${{ steps.deploy_infra_outputs.outputs.containerRegistry.id }} --role acrpull
+      run: az role assignment create --assignee ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }} --scope ${{ steps.deploy_infra_outputs.outputs.acr.id }} --role acrpull
     - name: Login to acr
-      run: az acr login --name ${{ steps.deploy_infra_outputs.outputs.containerRegistry.name }}
+      run: az acr login --name ${{ steps.deploy_infra_outputs.outputs.acr.name }}
     - name: Validate image tag
       if: ${{ env.IMAGE_TAG }} == ""
       run: echo "IMAGE_TAG=$env:GITHUB_SHA" >> $env:GITHUB_ENV
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag ${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
     - name: Push the Docker image to acr
-      run: docker push ${{ steps.deploy_infra_outputs.outputs.containerRegistry.loginServer }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
+      run: docker push ${{ steps.deploy_infra_outputs.outputs.acr.loginServer }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
