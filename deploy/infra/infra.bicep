@@ -19,6 +19,6 @@ module infra 'modules/infra.bicep' = {
   }
 }
 
-output rg string = rg.name
+output resourceGroup string = rg.name
 output storage string = infra.outputs.storage
-output acr object = infra.outputs.acr
+output containerRegistry object = infra.outputs.acr
