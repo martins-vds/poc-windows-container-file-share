@@ -107,6 +107,7 @@ jobs:
       uses: Azure/arm-deploy@v1.0.6
       with:
         region: ${{ env.LOCATION }}
+        scope: 'subscripion'
         template: ./deploy/infra/infra.bicep
         deploymentName: ${{ env.DEPLOYMENT_NAME }}-infra
         # Supply deployment parameter values.
