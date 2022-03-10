@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Deploy POC $(date +s)
 
 on:
   workflow_dispatch:
