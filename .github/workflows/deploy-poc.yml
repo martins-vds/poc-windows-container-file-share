@@ -114,7 +114,7 @@ jobs:
     - name: Assign service principal to acr
       run: az role assignment create --assignee ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }} --scope ${{ steps.deploy_infra.outputs.acr.id }} --role acrpull
     - name: Login to acr
-      run: az acr login --name ${{ ${{ steps.deploy_infra.outputs.acr.name }} }}
+      run: az acr login --name ${{ steps.deploy_infra.outputs.acr.name }}
     - name: Validate image tag
       if: ${{ env.IMAGE_TAG }} == ""
       run: echo "IMAGE_TAG=$env:GITHUB_SHA" >> $env:GITHUB_ENV
