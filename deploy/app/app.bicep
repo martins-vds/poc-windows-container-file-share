@@ -1,5 +1,5 @@
 param appName string
-param acr string
+param acrName string
 param fileShareMountPath string
 param storageAccountName string
 
@@ -7,6 +7,10 @@ param location string = resourceGroup().location
 param appServicePlanName string = 'plan-${appName}-${uniqueString(resourceGroup().id)}'
 param appServiceName string = 'app-${appName}-${uniqueString(resourceGroup().id)}'
 param imageTag string = 'latest'
+
+resource acr 'Microsoft.ContainerRegistry/registries@2021-09-01' existing = {
+  name: acrName
+}
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2021-03-01' = {
   name: appServicePlanName
@@ -42,7 +46,7 @@ resource appService 'Microsoft.Web/sites@2021-03-01' = {
     serverFarmId: appServicePlan.id
     siteConfig: {
       numberOfWorkers: 1
-      windowsFxVersion: 'DOCKER|${acr}/${appName}:latest'
+      windowsFxVersion: 'DOCKER|${acr.properties.loginServer}/${appName}:latest'
       acrUseManagedIdentityCreds: false
       alwaysOn: true
       http20Enabled: false
@@ -59,7 +63,7 @@ resource appServiceConfig 'Microsoft.Web/sites/config@2021-03-01' = {
   parent: appService
   name: 'web'
   properties: {
-    windowsFxVersion: 'DOCKER|${acr}/${appName}:${imageTag}'
+    windowsFxVersion: 'DOCKER|${acr.properties.loginServer}/${appName}:${imageTag}'
     publishingUsername: '$${appName}'
     alwaysOn: true
     azureStorageAccounts: {
