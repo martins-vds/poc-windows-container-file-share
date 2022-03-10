@@ -5,7 +5,6 @@ on:
     inputs:
       imageTag:
         type: text
-        default: ${{ github.sha }}
       appName:
         type: text
         required: true
@@ -116,6 +115,9 @@ jobs:
       run: az role assignment create --assignee ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }} --scope ${{ steps.deploy_infra.outputs.acr.id }} --role acrpull
     - name: Login to acr
       run: az acr login --name ${{ ${{ steps.deploy_infra.outputs.acr.name }} }}
+    - name: Validate image tag
+      if: ${{ env.IMAGE_TAG }} == ""
+      run: echo "IMAGE_TAG=$env:GITHUB_SHA" >> $env:GITHUB_ENV
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag ${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
     - name: Push the Docker image to acr
