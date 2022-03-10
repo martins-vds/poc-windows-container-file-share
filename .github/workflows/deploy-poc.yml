@@ -7,10 +7,12 @@ on:
         type: text
       appName:
         type: text
+        default: contoso
         required: true
       location:
         type: choice
         required: true
+        default: canadacentral
         options:
           - asia
           - asiapacific
@@ -92,7 +94,7 @@ env:
   APP_NAME: ${{ github.event.inputs.appName }} 
   LOCATION: ${{ github.event.inputs.location }}
   IMAGE_TAG: ${{ github.event.inputs.imageTag }}
-  DEPLOYMENT_NAME: "pocdeployment"
+  DEPLOYMENT_NAME: "pocdeployment$($(date +%s))"
 jobs:
   deploy-poc:
     name: Deploy base infrastructure
@@ -109,10 +111,10 @@ jobs:
         region: ${{ env.LOCATION }}
         scope: 'subscription'
         template: ./deploy/infra/infra.bicep
-        deploymentName: ${{ env.DEPLOYMENT_NAME }}-infra
+        deploymentName: ${{ env.DEPLOYMENT_NAME }}
         # Supply deployment parameter values.
-        parameters: appName=${{ env.APP_NAME }} location=${{ env.LOCATION }} deploymentName=${{ env.DEPLOYMENT_NAME }}-infra
-    - name: Fetch deployment output
+        parameters: appName=${{ env.APP_NAME }} location=${{ env.LOCATION }} deploymentName=${{ env.DEPLOYMENT_NAME }}
+    - name: Fetch '${{ env.DEPLOYMENT_NAME }}' deployment outputs
       id: deploy_infra_outputs
       run: |
         echo "::set-output name=containerRegistry::$(az deployment show -n ${{ env.DEPLOYMENT_NAME }} --query properties.outputs.containerRegistry)"
