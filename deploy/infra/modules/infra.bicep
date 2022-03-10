@@ -84,5 +84,9 @@ resource acr 'Microsoft.ContainerRegistry/registries@2021-12-01-preview' = {
   }
 }
 
-output acr string = acr.name
+output acr object = {
+  id: acr.id
+  name: acr.name
+  loginServer: acr.properties.loginServer
+}
 output storage string = storageAccount.name
