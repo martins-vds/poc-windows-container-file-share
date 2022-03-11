@@ -48,6 +48,28 @@ resource appService 'Microsoft.Web/sites@2021-03-01' = {
     hyperV: true
     isXenon: true
     siteConfig: {
+      appSettings: [
+        {
+          name: 'DOCKER_REGISTRY_SERVER_URL'
+          value: acr.properties.loginServer
+        }
+        {
+          name: 'DOCKER_REGISTRY_SERVER_USERNAME'
+          value: acr.listCredentials().username
+        }
+        {
+          name: 'DOCKER_REGISTRY_SERVER_PASSWORD'
+          value: acr.listCredentials().passwords[0].value
+        }
+        {
+          name: 'LegacyWebAppFilesPath'
+          value: fileShareMountPath
+        }
+        {
+          name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'
+          value: 'false'
+        }
+      ]
       numberOfWorkers: 1
       windowsFxVersion: 'DOCKER|${acr.properties.loginServer}/${appName}:${imageTag}'
       acrUseManagedIdentityCreds: false
