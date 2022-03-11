@@ -45,6 +45,8 @@ resource appService 'Microsoft.Web/sites@2021-03-01' = {
   properties: {
     enabled: true
     serverFarmId: appServicePlan.id
+    hyperV: true
+    isXenon: true
     siteConfig: {
       numberOfWorkers: 1
       windowsFxVersion: 'DOCKER|${acr.properties.loginServer}/${appName}:${imageTag}'
