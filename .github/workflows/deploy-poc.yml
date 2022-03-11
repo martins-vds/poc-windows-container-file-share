@@ -96,7 +96,7 @@ env:
   IMAGE_TAG: ${{ github.event.inputs.imageTag }}
   DEPLOYMENT_NAME: "pocdeployment"
 jobs:
-  deploy-poc:
+  deploy-poc-infra:
     name: Deploy base infrastructure
     runs-on: windows-latest
     steps:
