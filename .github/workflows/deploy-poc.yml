@@ -105,6 +105,12 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
+    - name: Setup NuGet.exe for use with actions
+      # You may pin to the exact commit or the version.
+      # uses: NuGet/setup-nuget@04b0c2b8d1b97922f67eca497d7cf0bf17b8ffe1
+      uses: NuGet/setup-nuget@v1.0.5
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1.0.2    
     - uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
@@ -126,10 +132,8 @@ jobs:
         echo "::set-output name=acr::$(az deployment sub show -n ${{ env.DEPLOYMENT_NAME }} --query properties.outputs.acr.value)"
         echo "::set-output name=rg::$(az deployment sub show -n ${{ env.DEPLOYMENT_NAME }} --query properties.outputs.rg.value)"
         echo "::set-output name=storage::$(az deployment sub show -n ${{ env.DEPLOYMENT_NAME }} --query properties.outputs.storage.value)"
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1.0.2
     - name: Restore the application
-      run: msbuild ${{ env.SOLUTION_NAME }} /t:Restore /p:Configuration=${{ env.BUILD_CONFIGURATION }}
+      run: nuget restore ${{ env.SOLUTION_NAME }}
     - name: Build the application
       run: msbuild ${{ env.SOLUTION_NAME }} /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:WebProjectOutputDir=obj/Docker/ /p:OutputPath=obj/Docker/publish
     - name: Validate image tag
