@@ -1,11 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 using System.IO.Abstractions;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Web;
 using System.Web.Mvc;
 
 namespace LegacyWebApp.Controllers
@@ -31,7 +26,7 @@ namespace LegacyWebApp.Controllers
         [HttpGet]
         [ActionName("new-file")]
         public ActionResult WriteFile()
-        { 
+        {
             var fileName = Guid.NewGuid().ToString();
             var filePath = $"{_legacyWebAppFilesPath}\\{fileName}.txt";
 

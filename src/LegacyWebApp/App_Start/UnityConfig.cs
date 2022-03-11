@@ -12,8 +12,8 @@ namespace LegacyWebApp
     {
         public static void RegisterComponents()
         {
-			var container = new UnityContainer();          
-         
+            var container = new UnityContainer();
+
             container.RegisterType<IFileSystem, FileSystem>();
 
             container.RegisterFactory<IConfiguration>(c =>
