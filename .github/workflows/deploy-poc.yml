@@ -95,6 +95,8 @@ env:
   LOCATION: ${{ github.event.inputs.location }}
   IMAGE_TAG: ${{ github.event.inputs.imageTag }}
   DEPLOYMENT_NAME: "pocdeployment"
+  BUILD_CONFIGURATION: "Release"
+  SOLUTION_NAME: "LegacyWebApp.sln"
 jobs:
   deploy-poc-infra:
     name: Deploy base infrastructure
@@ -122,13 +124,19 @@ jobs:
         echo "::set-output name=acr::$(az deployment sub show -n ${{ env.DEPLOYMENT_NAME }} --query properties.outputs.acr.value)"
         echo "::set-output name=rg::$(az deployment sub show -n ${{ env.DEPLOYMENT_NAME }} --query properties.outputs.rg.value)"
         echo "::set-output name=storage::$(az deployment sub show -n ${{ env.DEPLOYMENT_NAME }} --query properties.outputs.storage.value)"
-    - name: Login to acr
-      run: az acr login --name ${{ fromJson(steps.deploy_infra_outputs.outputs.acr).name }}
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1.0.2
+    - name: Restore the application
+      run: msbuild ${{ env.SOLUTION_NAME }} /t:Restore /p:Configuration=${{ env.BUILD_CONFIGURATION }}
+    - name: Build the application
+      run: msbuild ${{ env.SOLUTION_NAME }} /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:WebProjectOutputDir=obj/Docker/ /p:OutputPath=obj/Docker/publish
     - name: Validate image tag
       if: ${{ env.IMAGE_TAG }} == ""
       run: echo "IMAGE_TAG=$env:GITHUB_SHA" >> $env:GITHUB_ENV
     - name: Build the Docker image
       working-directory: ./src/LegacyWebApp
       run: docker build . --file Dockerfile --tag ${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
+    - name: Login to acr
+      run: az acr login --name ${{ fromJson(steps.deploy_infra_outputs.outputs.acr).name }}
     - name: Push the Docker image to acr
       run: docker push ${{ fromJson(steps.deploy_infra_outputs.outputs.acr).loginServer }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
