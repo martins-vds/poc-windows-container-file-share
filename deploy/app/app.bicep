@@ -51,7 +51,7 @@ resource appService 'Microsoft.Web/sites@2021-03-01' = {
       appSettings: [
         {
           name: 'DOCKER_REGISTRY_SERVER_URL'
-          value: acr.properties.loginServer
+          value: 'https://${acr.properties.loginServer}'
         }
         {
           name: 'DOCKER_REGISTRY_SERVER_USERNAME'
