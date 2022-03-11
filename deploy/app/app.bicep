@@ -13,6 +13,11 @@ resource acr 'Microsoft.ContainerRegistry/registries@2021-09-01' existing = {
   scope: resourceGroup()
 }
 
+resource storage 'Microsoft.Storage/storageAccounts@2021-08-01' existing = {
+  name: storageAccountName
+  scope: resourceGroup()
+}
+
 resource appServicePlan 'Microsoft.Web/serverfarms@2021-03-01' = {
   name: appServicePlanName
   location: location
@@ -97,6 +102,7 @@ resource appServiceConfig 'Microsoft.Web/sites/config@2021-03-01' = {
         accountName: storageAccountName
         shareName: storageAccountName
         mountPath: fileShareMountPath
+        accessKey: storage.listKeys().keys[0].value
       }
     }
   }
