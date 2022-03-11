@@ -10,6 +10,7 @@ param imageTag string = 'latest'
 
 resource acr 'Microsoft.ContainerRegistry/registries@2021-09-01' existing = {
   name: acrName
+  scope: resourceGroup()
 }
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2021-03-01' = {
@@ -46,7 +47,7 @@ resource appService 'Microsoft.Web/sites@2021-03-01' = {
     serverFarmId: appServicePlan.id
     siteConfig: {
       numberOfWorkers: 1
-      windowsFxVersion: 'DOCKER|${acr.properties.loginServer}/${appName}:latest'
+      windowsFxVersion: 'DOCKER|${acr.properties.loginServer}/${appName}:${imageTag}'
       acrUseManagedIdentityCreds: false
       alwaysOn: true
       http20Enabled: false

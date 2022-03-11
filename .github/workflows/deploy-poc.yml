@@ -97,6 +97,7 @@ env:
   DEPLOYMENT_NAME: "pocdeployment"
   BUILD_CONFIGURATION: "Release"
   SOLUTION_NAME: "LegacyWebApp.sln"
+  MOUNT_PATH: c:\files
 jobs:
   deploy-poc-infra:
     name: Deploy base infrastructure
@@ -143,3 +144,14 @@ jobs:
       run: docker build . --file Dockerfile --tag ${{ fromJson(steps.deploy_infra_outputs.outputs.acr).loginServer }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
     - name: Push the Docker image to acr
       run: docker push ${{ fromJson(steps.deploy_infra_outputs.outputs.acr).loginServer }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
+    - name: Deploy app
+      id: deploy_app
+      uses: Azure/arm-deploy@v1.0.6
+      with:
+        region: ${{ env.LOCATION }}
+        scope: 'resourcegroup'
+        resourceGroupName: ${{ steps.deploy_infra_outputs.outputs.rg }}
+        template: ./deploy/app/app.bicep
+        deploymentName: ${{ env.DEPLOYMENT_NAME }}
+        # Supply deployment parameter values.
+        parameters: appName=${{ env.APP_NAME }} acrName=${{ fromJson(steps.deploy_infra_outputs.outputs.acr).name }} fileShareMountPath=${{ env.MOUNT_PATH }} storageAccountName=${{ steps.deploy_infra_outputs.outputs.storage }} imageTag=${{ env.IMAGE_TAG }}
