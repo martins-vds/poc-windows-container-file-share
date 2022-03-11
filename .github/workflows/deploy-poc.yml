@@ -122,8 +122,6 @@ jobs:
         echo "::set-output name=acr::$(az deployment sub show -n ${{ env.DEPLOYMENT_NAME }} --query properties.outputs.acr.value)"
         echo "::set-output name=rg::$(az deployment sub show -n ${{ env.DEPLOYMENT_NAME }} --query properties.outputs.rg.value)"
         echo "::set-output name=storage::$(az deployment sub show -n ${{ env.DEPLOYMENT_NAME }} --query properties.outputs.storage.value)"
-    - name: Assign service principal to acr
-      run: az role assignment create --assignee ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }} --scope "${{ fromJson(steps.deploy_infra_outputs.outputs.acr).id }}" --role acrpull
     - name: Login to acr
       run: az acr login --name ${{ fromJson(steps.deploy_infra_outputs.outputs.acr).name }}
     - name: Validate image tag
