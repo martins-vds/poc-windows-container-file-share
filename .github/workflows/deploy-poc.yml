@@ -155,3 +155,10 @@ jobs:
         deploymentName: ${{ env.DEPLOYMENT_NAME }}
         # Supply deployment parameter values.
         parameters: appName=${{ env.APP_NAME }} acrName=${{ fromJson(steps.deploy_infra_outputs.outputs.acr).name }} fileShareMountPath=${{ env.MOUNT_PATH }} storageAccountName=${{ steps.deploy_infra_outputs.outputs.storage }} imageTag=${{ env.IMAGE_TAG }}
+    - name: Deploy container to Azure App Service
+      uses: Azure/webapps-deploy@v2
+      with: 
+        app-name: ${{ env.APP_NAME }}
+        images: ${{ fromJson(steps.deploy_infra_outputs.outputs.acr).loginServer }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
+        startup-command: C:\ServiceMonitor.exe w3svc
+    
