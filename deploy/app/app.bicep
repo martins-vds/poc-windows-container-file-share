@@ -107,3 +107,5 @@ resource appServiceConfig 'Microsoft.Web/sites/config@2021-03-01' = {
     }
   }
 }
+
+output appServiceName string = appService.name
