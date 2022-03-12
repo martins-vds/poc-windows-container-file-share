@@ -79,10 +79,12 @@ resource appService 'Microsoft.Web/sites@2021-03-01' = {
       windowsFxVersion: 'DOCKER|${acr.properties.loginServer}/${appName}:${imageTag}'
       acrUseManagedIdentityCreds: false
       alwaysOn: true
-      http20Enabled: false
+      http20Enabled: true
       functionAppScaleLimit: 0
       minimumElasticInstanceCount: 0
+      ftpsState: 'FtpsOnly'
     }
+    clientAffinityEnabled: false
     clientCertMode: 'Required'
     httpsOnly: true
     keyVaultReferenceIdentity: 'SystemAssigned'
@@ -96,6 +98,7 @@ resource appServiceConfig 'Microsoft.Web/sites/config@2021-03-01' = {
     windowsFxVersion: 'DOCKER|${acr.properties.loginServer}/${appName}:${imageTag}'
     publishingUsername: '$${appName}'
     alwaysOn: true
+    use32BitWorkerProcess: false
     azureStorageAccounts: {
       containerFiles: {
         type: 'AzureFiles'
