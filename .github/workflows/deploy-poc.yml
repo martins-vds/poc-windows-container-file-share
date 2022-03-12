@@ -160,5 +160,4 @@ jobs:
       with: 
         app-name: ${{ steps.deploy_app.outputs.appServiceName }}
         images: ${{ fromJson(steps.deploy_infra_outputs.outputs.acr).loginServer }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
-        startup-command: C:\ServiceMonitor.exe w3svc
     
