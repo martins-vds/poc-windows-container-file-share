@@ -160,4 +160,9 @@ jobs:
       with: 
         app-name: ${{ steps.deploy_app.outputs.appServiceName }}
         images: ${{ fromJson(steps.deploy_infra_outputs.outputs.acr).loginServer }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
+    - name: Smoke test
+      uses: lakuapik/gh-actions-http-status@v1
+      with:
+        sites: https://${{ steps.deploy_app.outputs.appServiceName }}.azurewebsites.net/disk
+        expected: 200
     
