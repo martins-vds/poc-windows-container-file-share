@@ -111,7 +111,7 @@ jobs:
     - name: Restore the application
       run: nuget restore ${{ env.SOLUTION_NAME }}
     - name: Build the application
-      run: msbuild ${{ env.SOLUTION_NAME }} /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:WebProjectOutputDir=obj/Docker/ /p:OutputPath=obj/Docker/publish      
+      run: msbuild ${{ env.SOLUTION_NAME }} /p:DeployOnBuild=true /p:PublishProfile=FolderProfile      
     - uses: azure/login@v1
       name: Login to Azure
       with:
