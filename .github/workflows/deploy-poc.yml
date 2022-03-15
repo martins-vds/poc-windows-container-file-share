@@ -160,6 +160,6 @@ jobs:
       with: 
         app-name: ${{ steps.deploy_app.outputs.appServiceName }}
         images: ${{ fromJson(steps.deploy_infra_outputs.outputs.acr).loginServer }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
-    - name: Smoke test
+    - name: Test application
       run: |
-        ..\..\scripts\Smoke-Test.ps1 -Url "https://${{ steps.deploy_app.outputs.appServiceName }}.azurewebsites.net" -ExpectedStatusCode 200
+        ./scripts/Smoke-Test.ps1 -Url "https://${{ steps.deploy_app.outputs.appServiceName }}.azurewebsites.net" -ExpectedStatusCode 200
