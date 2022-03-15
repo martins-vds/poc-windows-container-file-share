@@ -26,4 +26,4 @@ jobs:
       # Runs a single command using the runners shell
       - name: Smoke test
         run: |
-          ..\..\scripts\Smoke-Test.ps1 -Url "https://google.com" -ExpectedStatusCode 200
+          ./scripts/Smoke-Test.ps1 -Url "https://google.com" -ExpectedStatusCode 200
