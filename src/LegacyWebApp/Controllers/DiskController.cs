@@ -1,11 +1,16 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO.Abstractions;
-using System.Web.Mvc;
+using System.Net.Http;
+using System.Web.Http;
+using System.Web.Http.Description;
 
 namespace LegacyWebApp.Controllers
 {
-    public class DiskController : Controller
+    [RoutePrefix("api/disk")]
+    public class DiskController : ApiController
     {
         private readonly IFileSystem _fileSystem;
         private readonly string _legacyWebAppFilesPath;
@@ -17,22 +22,25 @@ namespace LegacyWebApp.Controllers
         }
 
         // GET: Disk
-        [HttpGet]
-        public ActionResult Index()
+        [HttpGet()]
+        [Route("", Name = nameof(Index))]
+        [ResponseType(typeof(IEnumerable<string>))]
+        public IHttpActionResult Index()
         {
-            return Json(_fileSystem.Directory.EnumerateFileSystemEntries(_legacyWebAppFilesPath), JsonRequestBehavior.AllowGet);
+            return Ok(_fileSystem.Directory.EnumerateFileSystemEntries(_legacyWebAppFilesPath));
         }
 
         [HttpGet]
-        [ActionName("new-file")]
-        public ActionResult WriteFile()
+        [Route("new-file")]
+        [ResponseType(typeof(string))]
+        public IHttpActionResult CreateFile()
         {
             var fileName = Guid.NewGuid().ToString();
             var filePath = $"{_legacyWebAppFilesPath}\\{fileName}.txt";
 
             _fileSystem.File.WriteAllText(filePath, fileName);
 
-            return Json($"File created: {filePath}", JsonRequestBehavior.AllowGet);
+            return CreatedAtRoute(nameof(Index), null,$"File created: {filePath}");
         }
     }
 }

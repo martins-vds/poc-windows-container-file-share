@@ -1,10 +1,9 @@
 using ConfigurationManagerProvider;
 using Microsoft.Extensions.Configuration;
-
 using System.IO.Abstractions;
-using System.Web.Mvc;
+using System.Web.Http;
 using Unity;
-using Unity.Mvc5;
+using Unity.WebApi;
 
 namespace LegacyWebApp
 {
@@ -12,7 +11,7 @@ namespace LegacyWebApp
     {
         public static void RegisterComponents()
         {
-            var container = new UnityContainer();
+			var container = new UnityContainer();
 
             container.RegisterType<IFileSystem, FileSystem>();
 
@@ -24,7 +23,7 @@ namespace LegacyWebApp
                             .Build();
             }, FactoryLifetime.Singleton);
 
-            DependencyResolver.SetResolver(new UnityDependencyResolver(container));
+            GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
         }
     }
 }
