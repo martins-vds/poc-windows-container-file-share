@@ -258,7 +258,19 @@ namespace LegacyWebApp
 
         private static string GetXmlCommentsPath()
         {
-            return Path.Combine(AppContext.BaseDirectory, "LegacyWebApp.xml");
+            var docPath = Path.Combine(AppContext.BaseDirectory, "bin", "LegacyWebApp.xml");
+            var fallbackDocPath = Path.Combine(AppContext.BaseDirectory, "LegacyWebApp.xml");
+            
+            if (File.Exists(docPath))
+            {
+                return docPath;
+            }
+            else if (File.Exists(fallbackDocPath))
+            {
+                return fallbackDocPath;
+            }
+
+            throw new FileNotFoundException("XML comments document not found.");
         }
     }
 }
