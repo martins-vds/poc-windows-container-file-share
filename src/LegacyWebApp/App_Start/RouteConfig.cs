@@ -1,5 +1,6 @@
 ﻿using Swashbuckle.Application;
 using System;
+using System.Linq;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -18,13 +19,17 @@ namespace LegacyWebApp
                 routeTemplate: "",
                 defaults: null,
                 constraints: null,
-                handler: new RedirectHandler((message => {
-                    if (message.RequestUri.IsLoopback)
+                handler: new RedirectHandler((message =>
+                {
+                    if (message.Headers.TryGetValues("X-Forwarded-Proto", out var list))
                     {
-                        return message.RequestUri.ToString();
+                        if (list != null && list.Any(l => l.Equals("https", StringComparison.InvariantCultureIgnoreCase)))
+                        {
+                            return message.RequestUri.GetComponents(UriComponents.AbsoluteUri & ~UriComponents.Port, UriFormat.UriEscaped).ToString();
+                        }
                     }
-
-                    return message.RequestUri.GetComponents(UriComponents.AbsoluteUri & ~UriComponents.Port, UriFormat.SafeUnescaped).ToString();
+                    
+                    return message.RequestUri.ToString();
                 }), "swagger")
             );
 
