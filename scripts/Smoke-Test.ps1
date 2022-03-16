@@ -17,7 +17,7 @@ function FailTest([string] $message){
 
 try {
     Write-Output "Sending HTTP GET request to '$($Url.AbsoluteUri)'..."
-    $response = Invoke-WebRequest -Uri $Url -TimeoutSec 30
+    $response = Invoke-WebRequest -Uri $Url -TimeoutSec 30 -SkipHttpErrorCheck -MaximumRedirection 1
     if ($response.StatusCode -eq $ExpectedStatusCode){
         Write-Output "Smoke test passed."
     }else{
