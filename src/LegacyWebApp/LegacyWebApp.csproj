@@ -46,7 +46,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\LegacyWebApp.xml</DocumentationFile>
+    <DocumentationFile>LegacyWebApp.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonExtensions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=322f904ec9d5f203, processorArchitecture=MSIL">
