@@ -10,15 +10,20 @@ param (
     $ExpectedStatusCode
 )
 
+function FailTest([string] $message){
+    Write-Output "::error title=Smoke test failed::$message"
+    Exit 1
+}
+
 try {
     Write-Output "Sending HTTP GET request to '$($Url.AbsoluteUri)'..."
-    $response = Invoke-WebRequest -Uri $Url -TimeoutSec 30 -MaximumRetryCount 3 -RetryIntervalSec 5
+    $response = Invoke-WebRequest -Uri $Url -TimeoutSec 30
     if ($response.StatusCode -eq $ExpectedStatusCode){
         Write-Output "Smoke test passed."
     }else{
-        Write-Output "::error title=Smoke test failed::Expected status code '$ExpectedStatusCode' but got '$($response.StatusCode)' instead"
+        FailTest("Expected status code '$ExpectedStatusCode' but got '$($response.StatusCode)' instead")
     }
 }
 catch {
-    Write-Output "::error title=Smoke test failed::$($_.Exception.Message)"
+    FailTest($_.Exception.Message)
 }
