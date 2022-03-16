@@ -21,6 +21,10 @@ namespace LegacyWebApp.Controllers
             _legacyWebAppFilesPath = $"{configuration["LegacyWebAppFilesPath"] ?? "c:\\temp"}";
         }
 
+        /// <summary>
+        /// Enumerates file system entries for a given path
+        /// </summary>
+        /// <returns>A list of folders and files</returns>
         // GET: Disk
         [HttpGet()]
         [Route("", Name = nameof(Index))]
@@ -30,6 +34,9 @@ namespace LegacyWebApp.Controllers
             return Ok(_fileSystem.Directory.EnumerateFileSystemEntries(_legacyWebAppFilesPath));
         }
 
+        /// <summary>
+        /// Creates a new file in a given path
+        /// </summary>
         [HttpGet]
         [Route("new-file")]
         [ResponseType(typeof(string))]

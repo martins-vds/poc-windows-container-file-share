@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LegacyWebApp</name>
+    </assembly>
+    <members>
+        <member name="M:LegacyWebApp.Controllers.DiskController.Index">
+            <summary>
+            Enumerates file system entries for a given path
+            </summary>
+            <returns>A list of folders and files</returns>
+        </member>
+        <member name="M:LegacyWebApp.Controllers.DiskController.CreateFile">
+            <summary>
+            Creates a new file in a given path
+            </summary>
+        </member>
+    </members>
+</doc>
